@@ -3,18 +3,6 @@ pipeline {
         //gitlab 소스 체크 후 다운
         options { skipDefaultCheckout(false) }
         stages {
-                stage('Build and Test') {
-                    agent {
-                        docker {
-                            image 'gradle:6.7.1-jdk8-openj9'
-                            args '-v /root/.gradle:/root/.gradle'
-                        }
-                    }
-                    options { skipDefaultCheckout(false) }
-                    steps {
-                        sh 'gradle build'
-                    }
-                }
                 stage('Docker build') {
                         agent any
                         steps {
@@ -41,7 +29,7 @@ pipeline {
                                         | xargs -r docker rmi'
 
                                 sh 'docker run -d --name front -p 80:80 front'
-                                sh 'docker run -d --name back -p 8080:8080 back'
+                                sh 'docker run -d --name back -p 8082:8080 back'
                         }
                 }
         }
