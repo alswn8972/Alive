@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="ssafy-fifth-web-common-project.main/Hibernate" uuid="8953286c-49fe-4f6b-b2a6-7cadfce9068a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://3.38.97.229:3306/live_alone?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=Asia/Seoul&amp;zeroDateTimeBehavior=convertToNull&amp;rewriteBatchedStatements=true</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
