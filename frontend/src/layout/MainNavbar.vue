@@ -1,14 +1,14 @@
 <template>
-
+  <div>
+  <OneSearchBar :visible="isOneRoom"/>
+  <ApartSearchBar :visible="isApart"/>
   <navbar
     position="fixed"
     type="info"
     menu-classes="ml-auto"
   >
     <template>
-      <img v-lazy="'img/mainlogo.jpg'" alt="" style="width:40px;"/>
-            
-      <router-link v-popover:popover1 class="navbar-brand" to="/search">
+      <router-link v-popover:popover1 class="navbar-brand" to="/">
         나 혼자 살거다
       </router-link>
       <el-popover
@@ -19,125 +19,138 @@
         trigger="hover"
       >
         <div class="popover-body">
-          전체가구 40%인<br>
-          1인 가구를 위하여..
+            전체가구 40%인<br>1인 가구를 위하여..
         </div>
       </el-popover>
     </template>
-    <template slot="navbar-menu">
-      <!-- <li class="nav-item">
-        <a
-          class="nav-link"
-          href="https://www.creative-tim.com/product/vue-now-ui-kit"
-          target="_blank"
-        >
-          <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-          <p>Download</p>
-        </a>
-      </li> -->
-      <!-- <drop-down
-        tag="li"
-        title="Components"
-        icon="now-ui-icons design_app"
-        class="nav-item"
-      >
-        <nav-link to="/">
-          <i class="now-ui-icons business_chart-pie-36"></i> All components
-        </nav-link>
-        <a
-          href="https://demos.creative-tim.com/vue-now-ui-kit/documentation"
-          target="_blank"
-          class="dropdown-item"
-        >
-          <i class="now-ui-icons design_bullet-list-67"></i> Documentation
-        </a>
-      </drop-down> -->
-    
-      <li class="nav-item" @click="search = !search">
-        <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-        <p style="color:#000000;">상세검색 <i class="now-ui-icons ui-1_zoom-bold"></i></p></a>
-      </li>
-      <navbar v-show="search" type="default" position="fixed" menu-classes="ml-auto" style="margin-top:63px">
-        <template slot="navbar-menu">
-          <li class="nav-item">
-            <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-                <p style="color:#000000;">방 종류</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-              <p style="color:#000000;">거래방식</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-              <p style="color:#000000;">가격대</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-              <p style="color:#000000;">방 면적</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-neutral" style="width:110px;" target="_blank">
-              <p style="color:#000000;">관리비</p>
-            </a>
-          </li>
-          
-        </template>
-      </navbar>
   
-      <li class="nav-item">
-        <router-link to="/login">
-          <a class="nav-link btn btn-neutral" style="width:100px;" target="_blank">
-            <p style="color:#000000;">로그인 <i class="now-ui-icons objects_key-25"></i></p></a>
-        </router-link>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link btn btn-neutral"
-          style="width:100px; color:#000000;"
-          target="_blank"
-        >
-          <p>회원가입</p>
-        </a>
-      </li>
-      
+    <template slot="navbar-menu">
+      <drop-down
+              tag="li"
+              :title="residenceType"
+              class="nav-item select"
+      >
+        <div class="nav-link"  v-for="(items, index) in getRoomType.residenceCategoryList" :key="index" @click="changeItem(items.categoryName, index)"> 
+          <i class="now-ui-icons education_paper"></i> {{ items.categoryName }}
+        </div>
+        
+      </drop-down>
+      <template v-if="isLogin">
+        <li class="nav-item">
+          <a class="nav-link">
+            <router-link to="/login"> <i class="now-ui-icons media-1_button-power"></i><p>로그인</p></router-link>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">
+            <router-link to="/signup"><p>회원가입</p></router-link>
+          </a>
+        </li>
+      </template>
+      <template v-else>
+        <li class="nav-item">
+          <a class="nav-link">
+            <span @click="clickLogout()"><p>로그아웃</p></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">
+            <router-link to="/profile"><i class="now-ui-icons users_circle-08"></i><p>마이페이지</p></router-link>
+          </a>
+        </li>
+      </template>
 
-      
     </template>
+ 
   </navbar>
+
+  </div>
 </template>
 
 <script>
-import {  Navbar } from '@/components';
+import { DropDown, Navbar, } from '@/components';
 import { Popover } from 'element-ui';
+import OneSearchBar from '../pages/SearchBar/OneSearchBar.vue';
+import ApartSearchBar from '../pages/SearchBar/ApartSearchBar.vue';
+import { mapGetters } from 'vuex';
 export default {
-  name: 'main-navbar',
+  name: "main-navbar",
   props: {
     transparent: Boolean,
-    colorOnScroll: Number
+    colorOnScroll: Number,
   },
   components: {
-    
-    Navbar,
 
+    DropDown,
+    OneSearchBar,
+    ApartSearchBar,
+    Navbar,
     [Popover.name]: Popover
   },
   data(){
     return{
-      search:false,
+      isLogin:false,
+      isOneRoom:false,
+      isApart:false,
+      residenceType:"방 종류",
+      residenceIndex:0,
     }
-  }
+  },
+  methods:{
+    clickSearch(index){
+      if(index==0){
+        //console.log("원룸");
+        this.isOneRoom = true;
+        this.isApart = false;
+        //console.log(this.isOneRoom);
+        return;
+      }else if(index== 1){
+        //console.log("오피스텔");
+        this.isOneRoom = false;
+        this.isApart = true;
+        //console.log(this.isOneRoom);
+        return;
+      }
+    },
+    changeItem(a, index) {
+      this.residenceType = a;
+      this.residenceIndex = index;
+      this.clickSearch(this.residenceIndex);
+      return;
+    },
+    clickLogout() {
+      this.isLogin=false;
+      localStorage.clear();
+    },
+
+  },
+  mounted(){
+    if(localStorage.getItem("accessToken")!=null){
+        this.isLogin=true;
+    }else{
+      this.isLogin=false;
+    }
+  },
+  create(){
+    if(localStorage.getItem("accessToken")!=null){
+        this.isLogin=true;
+    }else{
+      this.isLogin=false;
+    }
+  },
+  computed :{
+    ...mapGetters('search',['getRoomType',]),
+  },
 };
 </script>
 
 <style scoped>
 .bg-info {
-    background-color: #000000 !important;
+    background-color: #eb8816 !important;
 }
 .bg-default {
-    background-color: #ffffff !important;
+  background-color: #ffffff !important;
 }
+
+
 </style>
