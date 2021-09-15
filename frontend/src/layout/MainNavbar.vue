@@ -1,7 +1,6 @@
 <template>
   <div>
     <DetailSearch v-show="isdetail" />
-
     <navbar position="fixed" type="info" menu-classes="ml-auto">
       <template>
         <router-link v-popover:popover1 class="navbar-brand" to="/">
@@ -19,10 +18,9 @@
           </div>
         </el-popover>
       </template>
-
       <template slot="navbar-menu">
         <li class="nav-item">
-          <a class="nav-link" @click="changeItem(0, 0)"> 상세 검색 </a>
+          <a class="nav-link" @click="changeItem()"> 상세 검색 </a>
         </li>
         <li class="nav-item">
           <a class="nav-link">
@@ -61,34 +59,45 @@ export default {
     Navbar,
     [Popover.name]: Popover,
   },
+
   data() {
     return {
       isdetail: false,
       residenceType: "방 종류",
       residenceIndex: 0,
     };
+
   },
   methods: {
-    clickSearch(name, index) {},
-
-    changeItem(a, index) {
-      console.log(a, index);
-
-      if (this.isdetail) {
-        this.isdetail = false;
-      } else {
-        this.isdetail = true;
-      }
-
-      console.log(this.isdetail);
+    changeItem() {
+      this.isdetail = !this.isdetail;
     },
+    clickLogout() {
+      this.isLogin=false;
+      localStorage.clear();
+    },
+    
   },
 
-  computed: {
-    ...mapGetters("search", ["getRoomType", "getBargainType"]),
+  mounted(){
+    if(localStorage.getItem("accessToken")!=null){
+      this.isLogin=true;
+    }else{
+      this.isLogin=false;
+    }
   },
+  create(){
+    if(localStorage.getItem("accessToken")!=null){
+        this.isLogin=true;
+    }else{
+        this.isLogin=false;
+    }
+  },
+  
+ 
 };
 </script>
+
 
 <style scoped>
 .bg-info {
